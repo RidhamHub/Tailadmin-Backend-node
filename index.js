@@ -41,16 +41,16 @@ app.use("/uploads", express.static("uploads"));
 
 app.use(cookieParser())
 
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
 app.use(cors({
     origin: [
         "http://localhost:5173",
-        "https://react-tail-admin-at-infilon.vercel.app"
-    ],
+        "https://react-tail-admin-at-infilon.vercel.app"],
     credentials: true, //🔥 REQUIRED for cookies  , aa sikhvanu chhe ho....
 }))
 
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
 
 
 app.use("/auth", userRouter)
