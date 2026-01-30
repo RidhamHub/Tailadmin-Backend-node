@@ -8,8 +8,8 @@ const cors = require('cors');
 
 const  cookieParser = require('cookie-parser')
 
-const Port = 7000;
-mongoose.connect("mongodb+srv://root:root@ridham01.ogpjzk1.mongodb.net/tailadmin").then(e => console.log("MongoDB is connected successfully...."))
+const Port = process.env.PORT || 7000;
+mongoose.connect(process.env.MONGO_URL).then(e => console.log("MongoDB is connected successfully...."))
 
 const userRouter = require('./routes/auth')
 const productRouter = require('./routes/product')
