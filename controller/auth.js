@@ -89,16 +89,22 @@ const handleLoginUser = async (req, res) => {
 
         res.cookie("accessToken", accessToken, {
             maxAge: 15 * 60 * 1000,
-            httpOnly: false,
-            // sameSite: "lax",
+            httpOnly: true,
+            secure: true,      // REQUIRED for HTTPS
+            sameSite: "lax",  // REQUIRED for cross-site
         })
 
         res.cookie("refreshToken", refreshToken, {
-            maxAge: 7 * 24 * 60 * 60 * 1000
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            httpOnly: true,
+            secure: true,      // REQUIRED for HTTPS
+            sameSite: "lax",  // REQUIRED for cross-site
         })
 
         res.json({
             msg: "user logged in succeefully  ",
+            accessToken: accessToken,      
+            refreshToken: refreshToken,    
             user: {
                 id: user._id,
                 fullName: user.fullName,
