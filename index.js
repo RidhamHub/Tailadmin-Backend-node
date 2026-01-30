@@ -45,12 +45,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use(cors({
-    // origin: [
-    //     "http://localhost:5173",
-    //     "https://react-tail-admin-at-infilon.vercel.app"],
-
-    
-    origin:"https://react-tail-admin-at-infilon.vercel.app",
+    origin: [
+        "http://localhost:5173",
+        "https://react-tail-admin-at-infilon.vercel.app"],
     credentials: true, //🔥 REQUIRED for cookies  , aa sikhvanu chhe ho....
 }))
 
