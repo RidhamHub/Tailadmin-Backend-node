@@ -42,7 +42,7 @@ app.use("/uploads", express.static("uploads"));
 app.use(cookieParser())
 
 app.use(cors({
-    origin: "https://react-tail-admin-at-infilon.vercel.app",
+    origin: ["http://localhost:5173", "https://tailadmin-backend.onrender.com"],
     credentials: true, //🔥 REQUIRED for cookies  , aa sikhvanu chhe ho....
 }))
 
