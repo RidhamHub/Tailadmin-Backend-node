@@ -11,7 +11,7 @@ const createUser = async (req, res) => {
 
         // console.log("REQ BODY:", req.body);
         // console.log("REQ FILE:", req.file);
-        
+
         const isExistingEmail = await User.findOne({ email });
         if (isExistingEmail) {
             return res.status(400).json({ msg: "User already exitst " });
@@ -31,12 +31,12 @@ const createUser = async (req, res) => {
     } catch (e) {
         res.status(400).json({
             msg: "server error for creating new user",
-            error : e
-         })
+            error: e
+        })
 
     }
 
-    
+
 
 }
 
@@ -107,7 +107,11 @@ const handleLoginUser = async (req, res) => {
                 id: user._id,
                 fullName: user.fullName,
                 profileImage: user.profileImage,
-                role : user.role,
+                role: user.role,
+            },
+            tokens: {
+                accessToken,
+                refreshToken
             }
         })
     }

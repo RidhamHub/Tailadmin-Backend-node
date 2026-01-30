@@ -6,7 +6,7 @@ const app = express();
 const mongoose = require("mongoose");
 const cors = require('cors');
 
-const  cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser')
 
 const Port = process.env.PORT || 7000;
 mongoose.connect(process.env.MONGO_URL).then(e => console.log("MongoDB is connected successfully...."))
@@ -42,7 +42,7 @@ app.use("/uploads", express.static("uploads"));
 app.use(cookieParser())
 
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "https://tailadmin-backend.onrender.com"],
     credentials: true, //🔥 REQUIRED for cookies  , aa sikhvanu chhe ho....
 }))
 
@@ -52,7 +52,7 @@ app.use(express.json());
 
 app.use("/auth", userRouter)
 // app.use(authmiddleware)
-app.use("/product",authmiddleware,productRouter);
+app.use("/product", authmiddleware, productRouter);
 
 app.listen(Port, () => {
     console.log("server started at port 7000");
