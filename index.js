@@ -48,7 +48,8 @@ app.use(cors({
     credentials: true,
 }));
 
-app.options("*", cors());
+// ✅ FIXED preflight handler
+app.options(/.*/, cors());
 
 
 app.use(cookieParser())
