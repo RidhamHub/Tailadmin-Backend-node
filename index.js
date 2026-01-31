@@ -44,9 +44,12 @@ app.use((err, req, res, next) => {
 app.use("/uploads", express.static("uploads"));
 
 app.use(cors({
-    origin: ["http://localhost:5173", "https://react-tail-admin-at-infilon.vercel.app"],
+    origin: "https://react-tail-admin-at-infilon.vercel.app",
     credentials: true,
 }));
+
+app.options("*", cors());
+
 
 app.use(cookieParser())
 

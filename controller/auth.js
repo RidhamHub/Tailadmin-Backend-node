@@ -91,17 +91,17 @@ const handleLoginUser = async (req, res) => {
 
         res.cookie("accessToken", accessToken, {
             httpOnly: true,
-            secure: isProd,                 // true on Vercel
-            sameSite: isProd ? "none" : "lax",
-            path: "/",                      // 🔥 REQUIRED
+            secure: true,          // REQUIRED on Vercel
+            sameSite: "none",      // REQUIRED cross-domain
+            path: "/",             // 🔥 REQUIRED (VERY IMPORTANT)
             maxAge: 15 * 60 * 1000,
         });
 
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
-            secure: isProd,
-            sameSite: isProd ? "none" : "lax",
-            path: "/",                      // 🔥 REQUIRED
+            secure: true,
+            sameSite: "none",
+            path: "/",             // 🔥 REQUIRED
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
