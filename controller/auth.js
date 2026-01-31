@@ -89,22 +89,22 @@ const handleLoginUser = async (req, res) => {
 
         res.cookie("accessToken", accessToken, {
             maxAge: 15 * 60 * 1000,
-            httpOnly: true,
-            secure: true,      // REQUIRED for HTTPS
-            sameSite: "lax",  // REQUIRED for cross-site
+            httpOnly: false,
+            secure: process.env.NODE_ENV === "production", // HTTPS only in production
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // "none" required for cross-site in production
+            domain: process.env.NODE_ENV === "production" ? process.env.COOKIE_DOMAIN : undefined
         })
 
         res.cookie("refreshToken", refreshToken, {
             maxAge: 7 * 24 * 60 * 60 * 1000,
-            httpOnly: true,
-            secure: true,      // REQUIRED for HTTPS
-            sameSite: "lax",  // REQUIRED for cross-site
+            httpOnly: false,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            domain: process.env.NODE_ENV === "production" ? process.env.COOKIE_DOMAIN : undefined
         })
 
         res.json({
             msg: "user logged in succeefully  ",
-            accessToken: accessToken,      
-            refreshToken: refreshToken,    
             user: {
                 id: user._id,
                 fullName: user.fullName,

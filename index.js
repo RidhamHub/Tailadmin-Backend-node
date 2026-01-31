@@ -9,8 +9,12 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser')
 
 const Port = process.env.PORT || 7000;
-mongoose.connect(process.env.MONGO_URL).then(e => console.log("MongoDB is connected successfully...."))
-
+mongoose.connect(process.env.MONGO_URL)
+    .then(() => console.log("MongoDB is connected successfully...."))
+    .catch((err) => {
+        console.error("MongoDB connection error:", err);
+        process.exit(1);
+    });
 const userRouter = require('./routes/auth')
 const productRouter = require('./routes/product')
 
@@ -45,10 +49,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use(cors({
-    origin: [
-        "http://localhost:5173",
-        "https://react-tail-admin-at-infilon.vercel.app"],
-    credentials: true, //🔥 REQUIRED for cookies  , aa sikhvanu chhe ho....
+    origin: process.env.FRONTEND_URL || "http://localhost:5173", // Make it configurable
+    credentials: true,
 }))
 
 

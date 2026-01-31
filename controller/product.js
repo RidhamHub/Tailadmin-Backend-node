@@ -65,7 +65,7 @@ async function fetchProductForUpdate(req, res) {
     } catch (e) {
         console.log("error for product fetch to edit : ", error);
         return res.status(500).json({
-            error: error.message,
+            error: e.message,
         })
     }
 }
