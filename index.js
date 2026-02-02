@@ -18,31 +18,7 @@ mongoose.connect(process.env.MONGO_URL)
         process.exit(1);
     });
 
-// CORS configuration - allow frontend domain
-const allowedOrigins = [
-    process.env.FRONTEND_URL,
-    "http://localhost:5173",
-    "http://localhost:3000",
-    "http://localhost:5174"
-].filter(Boolean);
-
-app.use(
-    cors({
-        origin: (origin, callback) => {
-            // allow server-to-server or curl
-            if (!origin) return callback(null, true);
-
-            if (allowedOrigins.includes(origin)) {
-                return callback(null, true);
-            }
-
-            return callback(new Error("Not allowed by CORS"));
-        },
-        credentials: true,
-        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        allowedHeaders: ["Content-Type", "Authorization"]
-    })
-);
+app.use(cors());
 
 app.use(cookieParser())
 app.use(express.urlencoded({ extended: false }));
@@ -54,7 +30,7 @@ if (process.env.NODE_ENV !== 'production' || process.env.VERCEL !== '1') {
 }
 
 const userRouter = require('./routes/auth')
-const productRouter = require('./routes/product')
+// const productRouter = require('./routes/product')
 
 const authmiddleware = require("./middleware/authmiddleware")
 const multer = require("multer");
@@ -86,7 +62,7 @@ app.get("/", (req, res) => {
 
 app.use("/auth", userRouter)
 // app.use(authmiddleware)
-app.use("/product", productRouter);
+// app.use("/product", productRouter);
 
 // Export for Vercel serverless
 module.exports = app;
