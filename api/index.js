@@ -1,3 +1,5 @@
-const app = require("../index.js");
+const app = require("../index");
 
-export default app;
+module.exports = (req, res) => {
+  app(req, res);
+};
