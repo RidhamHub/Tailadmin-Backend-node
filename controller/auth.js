@@ -2,14 +2,19 @@ const User = require("../model/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || "defaultAccessTokenSecret";
+const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || "defaultRefreshTokenSecret";
 const isProd = process.env.NODE_ENV === "production";
 
+if (!process.env.ACCESS_TOKEN_SECRET || !process.env.REFRESH_TOKEN_SECRET) {
+    console.warn("WARNING: ACCESS_TOKEN_SECRET or REFRESH_TOKEN_SECRET is not set. Falling back to default secrets.");
+}
 
 const createUser = async (req, res) => {
 
     try {
         const { fullName, email, password } = req.body;
-        
+
         // Handle file upload - support both disk and memory storage
         let imagePath = "";
         if (req.file) {
@@ -82,7 +87,7 @@ const handleLoginUser = async (req, res) => {
                 userId: user._id,
                 role: user.role,
             },
-            process.env.ACCESS_TOKEN_SECRET,
+            ACCESS_TOKEN_SECRET,
             {
                 expiresIn: "15m"
             }
@@ -93,7 +98,7 @@ const handleLoginUser = async (req, res) => {
                 userId: user._id,
                 role: user.role,
             },
-            process.env.REFRESH_TOKEN_SECRET,
+            REFRESH_TOKEN_SECRET,
             {
                 expiresIn: "7d"
             }
@@ -153,7 +158,7 @@ const handleRefershToken = async (req, res) => {
             return res.status(401).json({ msg: "refreshtoken not found." })
         }
 
-        const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+        const decoded = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET);
 
         const user = await User.findById(decoded.userId);
         if (!user || !user.refreshToken) {
@@ -165,7 +170,7 @@ const handleRefershToken = async (req, res) => {
                 userId: user._id,
                 role: user.role
             },
-            process.env.ACCESS_TOKEN_SECRET,
+            ACCESS_TOKEN_SECRET,
             {
                 expiresIn: "15m"
             }
@@ -183,7 +188,7 @@ const handleRefershToken = async (req, res) => {
         });
 
         // Also return in response body for localStorage usage
-        res.json({ 
+        res.json({
             msg: "Token Refreshed Successfully.......",
             accessToken: newAccessToken
         })
@@ -201,7 +206,7 @@ const handleLogout = async (req, res) => {
         const refreshToken = req.cookies.refreshToken;
 
         if (refreshToken) {
-            const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+            const decoded = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET);
             await User.findByIdAndUpdate(decoded.userId, { refreshToken: null })
         }
 
