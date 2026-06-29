@@ -8,9 +8,9 @@ const authMiddleware = require("../middleware/authmiddleware");
 
 router.get("/", getAllProducts);
 router.post("/create", authMiddleware, addProduct);
-router.post("/del/:id", authmiddleware, roleMiddleware,  deleteProduct);
-router.put("/edit/:id", authmiddleware, updateData);
-router.get("/edit/:id", authmiddleware, fetchProductForUpdate);
+router.post("/del/:id", authMiddleware, roleMiddleware,  deleteProduct);
+router.put("/edit/:id", authMiddleware, updateData);
+router.get("/edit/:id", authMiddleware, fetchProductForUpdate);
 
 
 module.exports = router;
