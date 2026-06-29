@@ -66,7 +66,7 @@ app.use(cors({
 
 app.use("/auth", userRouter)
 // app.use(authmiddleware)
-app.use("/product", authmiddleware, productRouter);
+app.use("/product", productRouter);
 
 app.get("/health", (req, res) => {
     res.status(200).json({
