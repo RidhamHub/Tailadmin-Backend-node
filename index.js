@@ -9,12 +9,17 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser')
 
 const Port = process.env.PORT || 7000;
-mongoose.connect(process.env.MONGO_URL)
-    .then(() => console.log("MongoDB is connected successfully...."))
-    .catch((err) => {
-        console.error("MongoDB connection error:", err);
-        process.exit(1);
-    });
+
+if (process.env.MONGO_URL) {
+    mongoose.connect(process.env.MONGO_URL)
+        .then(() => console.log("MongoDB is connected successfully...."))
+        .catch((err) => {
+            console.error("MongoDB connection error:", err);
+        });
+} else {
+    console.warn("MONGO_URL not set. Continuing without MongoDB connection.");
+}
+
 const userRouter = require('./routes/auth')
 const productRouter = require('./routes/product')
 
@@ -51,8 +56,9 @@ app.use(express.json());
 app.use(cors({
     origin: [
         "http://localhost:5173",
-        "https://react-tail-admin-at-infilon.vercel.app"
-    ],
+        "https://react-tail-admin-at-infilon.vercel.app",
+        process.env.FRONTEND_URL,
+    ].filter(Boolean),
     credentials: true
 }));
 
@@ -70,6 +76,10 @@ app.get("/health", (req, res) => {
     });
 });
 
-app.listen(Port, () => {
-    console.log("server started at port 7000");
-})
+if (require.main === module) {
+    app.listen(Port, () => {
+        console.log(`server started at port ${Port}`);
+    });
+}
+
+module.exports = app;
