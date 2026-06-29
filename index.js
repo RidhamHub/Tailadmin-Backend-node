@@ -9,32 +9,18 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser')
 
 const Port = process.env.PORT || 7000;
-
-// MongoDB connection
 mongoose.connect(process.env.MONGO_URL)
     .then(() => console.log("MongoDB is connected successfully...."))
     .catch((err) => {
         console.error("MongoDB connection error:", err);
         process.exit(1);
     });
-
-app.use(cors({
-    origin: "*"
-}));
-
-app.use(cookieParser())
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-
-// Serve static files (for Vercel, we'll handle uploads differently)
-if (process.env.NODE_ENV !== 'production' || process.env.VERCEL !== '1') {
-    app.use("/uploads", express.static("uploads"));
-}
-
 const userRouter = require('./routes/auth')
-// const productRouter = require('./routes/product')
+const productRouter = require('./routes/product')
 
 const authmiddleware = require("./middleware/authmiddleware")
+
+
 const multer = require("multer");
 
 app.use((err, req, res, next) => {
@@ -54,24 +40,42 @@ app.use((err, req, res, next) => {
     next();
 });
 
-app.get("/", (req, res) => {
-    res.status(200).json({
-        status: "ok",
-        message: "Backend is running",
-    });
-});
+
+app.use("/uploads", express.static("uploads"));
+
+app.use(cookieParser())
+
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
+app.use(cors({
+<<<<<<< HEAD
+    origin: process.env.FRONTEND_URL || "http://localhost:5173", // Make it configurable
+    credentials: true,
+}))
+=======
+    origin: [
+        "http://localhost:5173",
+        "https://react-tail-admin-at-infilon.vercel.app"
+    ],
+    credentials: true
+}));
+>>>>>>> e703dd8 (Refactor code structure for improved readability and maintainability)
+
 
 
 app.use("/auth", userRouter)
-app.use(authmiddleware)
-app.use("/product", productRouter);
+// app.use(authmiddleware)
+app.use("/product", authmiddleware, productRouter);
 
-// Export for Vercel serverless
-module.exports = app;
-
-// Only listen if not in Vercel environment
-if (process.env.VERCEL !== '1') {
-    app.listen(Port, () => {
-        console.log("server started at port " + Port);
+app.get("/health", (req, res) => {
+    res.status(200).json({
+        status: "ok",
+        message: "Backend is healthy",
+        uptime: process.uptime()
     });
-}
+});
+
+app.listen(Port, () => {
+    console.log("server started at port 7000");
+})
