@@ -49,18 +49,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use(cors({
-<<<<<<< HEAD
-    origin: process.env.FRONTEND_URL || "http://localhost:5173", // Make it configurable
-    credentials: true,
-}))
-=======
     origin: [
         "http://localhost:5173",
         "https://react-tail-admin-at-infilon.vercel.app"
     ],
     credentials: true
 }));
->>>>>>> e703dd8 (Refactor code structure for improved readability and maintainability)
 
 
 
